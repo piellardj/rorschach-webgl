@@ -28,13 +28,17 @@
         ],
         "no-console": false,
         "no-default-export": true,
+        "no-string-literal": false,
         "object-literal-sort-keys": false,
         "only-arrow-functions": [
             true,
             "allow-declarations",
             "allow-named-functions"
         ],
-        "prefer-template": true,
+        "prefer-template": [
+            true,
+            "allow-single-concat"
+        ],
         "strict-boolean-expressions": [
             true,
             "allow-string"
@@ -49,7 +53,8 @@
         ],
         "variable-name": [
             true,
-            "check-format"
+            "check-format",
+            "allow-leading-underscore"
         ]
     },
     "rulesDirectory": []
