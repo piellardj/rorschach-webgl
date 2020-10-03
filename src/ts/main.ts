@@ -4,6 +4,7 @@ import { Viewport } from "./gl-utils/viewport";
 import * as ShaderManager from "./gl-utils/shader-manager";
 import { Shader } from "./gl-utils/shader";
 import { VBO } from "./gl-utils/vbo";
+import { Parameters } from "./parameters";
 
 import "./page-interface-generated";
 
@@ -15,13 +16,21 @@ function main(): void {
         Viewport.setFullCanvas(gl);
 
         shader.u["uAspectRatio"].value = Page.Canvas.getAspectRatio();
-        shader.bindUniforms();
 
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    function mainLoop(): void {
+    function mainLoop(timeInMs: number): void {
+        const timeInSeconds = 0.001 * timeInMs;
+
         clearCanvas();
+
+        shader.u["uTime"].value = Parameters.time ? timeInSeconds : 0;
+        shader.u["uSharpness"].value = Parameters.sharpness;
+        shader.u["uThreshold"].value = 1 - Parameters.density;
+
+        shader.bindUniforms();
+
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         requestAnimationFrame(mainLoop);

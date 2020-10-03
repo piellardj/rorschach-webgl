@@ -20,7 +20,37 @@ const data = {
         height: 512,
         enableFullscreen: true
     },
-    controlsSections: []
+    controlsSections: [
+        {
+            title: "Parameters",
+            controls: [
+                {
+                    type: Demopage.supportedControls.Checkbox,
+                    title: "Time",
+                    id: "time-checkbox-id",
+                    checked: true
+                },
+                {
+                    type: Demopage.supportedControls.Range,
+                    title: "Sharpness",
+                    id: "sharpness-range-id",
+                    min: 0,
+                    max: 1,
+                    value: 0.95,
+                    step: 0.01
+                },
+                {
+                    type: Demopage.supportedControls.Range,
+                    title: "Density",
+                    id: "density-range-id",
+                    min: 0,
+                    max: 1,
+                    value: 0.44,
+                    step: 0.01
+                },
+            ],
+        }
+    ]
 };
 
 const SRC_DIR = path.resolve(__dirname);
