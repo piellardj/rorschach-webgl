@@ -89,12 +89,15 @@ void main(void)
     const vec3 backgroundColor = vec3(1);
     const vec3 inkColor = vec3(0);
 
-    // horizontal symmetry
-    vec2 uv = vUv;
-    uv.x = abs(uv.x - 0.5) + 0.5;
-    vec3 coords = vec3(uv, 0.1 * uTime);
+    vec3 coordsRorschach = vec3(vUv, 0.1 * uTime);
+    coordsRorschach.x = abs(coordsRorschach.x - 0.5) + 0.5; // horizontal symmetry
+    float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
 
-    float noise = layeredNoise(coords) + 0.5;
+    // weaker additional noise to break the symmetry
+    vec3 coordsSupport = vec3(vUv, 0.001 * uTime);
+    float noiseSupport = gradientNoise(coordsSupport, 50.0);
+
+    float noise = noiseRorschach + 0.03 * noiseSupport;
     float ink = smoothstep(uSharpness * uThreshold, uThreshold, noise);
 
     vec3 color = mix(backgroundColor, inkColor, ink);
