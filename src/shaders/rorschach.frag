@@ -96,8 +96,9 @@ void main(void)
     // weaker additional noise to break the symmetry
     vec3 coordsSupport = vec3(vUv, 0.001 * uTime);
     float noiseSupport = gradientNoise(coordsSupport, 50.0);
+    float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.04, abs(vUv.x)));
 
-    float noise = noiseRorschach + 0.03 * noiseSupport;
+    float noise = noiseRorschach + noiseSupportFactor * noiseSupport;
     float ink = smoothstep(uSharpness * uThreshold, uThreshold, noise);
 
     vec3 color = mix(backgroundColor, inkColor, ink);
