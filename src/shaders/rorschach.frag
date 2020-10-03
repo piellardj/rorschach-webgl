@@ -4,7 +4,7 @@ uniform float uTime;
 uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
 
-varying vec2 uv;
+varying vec2 vUv;
 
 // returns a value in [-0.5, 0.5]^3
 vec3 random(vec3 i) {
@@ -72,7 +72,7 @@ float layeredNoise(vec3 coords)
     float amplitude = 0.5;
     float scale = 5.0;
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 5; i++)
     {
         float noise = gradientNoise(coords, scale);
         result += amplitude * noise;
@@ -89,6 +89,9 @@ void main(void)
     const vec3 backgroundColor = vec3(1);
     const vec3 inkColor = vec3(0);
 
+    // horizontal symmetry
+    vec2 uv = vUv;
+    uv.x = abs(uv.x - 0.5) + 0.5;
     vec3 coords = vec3(uv, 0.1 * uTime);
 
     float noise = layeredNoise(coords) + 0.5;
