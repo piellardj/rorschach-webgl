@@ -7,5 +7,5 @@ varying vec2 vUv;
 void main(void)
 {
     gl_Position = vec4(aCoords, 0, 1);
-    vUv = 0.5 + 0.5 * aCoords * vec2(uAspectRatio, 1.0);
+    vUv = 0.5 * aCoords * vec2(uAspectRatio, 1.0);
 }

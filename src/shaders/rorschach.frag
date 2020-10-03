@@ -4,7 +4,7 @@ uniform float uTime;
 uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
 
-varying vec2 vUv;
+varying vec2 vUv; // [0,0] should be the center of the canvas
 
 // returns a value in [-0.5, 0.5]^3
 vec3 random(vec3 i) {
@@ -90,7 +90,7 @@ void main(void)
     const vec3 inkColor = vec3(0);
 
     vec3 coordsRorschach = vec3(vUv, 0.1 * uTime);
-    coordsRorschach.x = abs(coordsRorschach.x - 0.5) + 0.5; // horizontal symmetry
+    coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
     float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
 
     // weaker additional noise to break the symmetry
