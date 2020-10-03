@@ -5,6 +5,7 @@ import * as ShaderManager from "./gl-utils/shader-manager";
 import { Shader } from "./gl-utils/shader";
 import { VBO } from "./gl-utils/vbo";
 import { Parameters } from "./parameters";
+import { getTime } from "./time";
 
 import "./page-interface-generated";
 
@@ -20,12 +21,10 @@ function main(): void {
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    function mainLoop(timeInMs: number): void {
-        const timeInSeconds = 0.001 * timeInMs;
-
+    function mainLoop(): void {
         clearCanvas();
 
-        shader.u["uTime"].value = Parameters.time ? timeInSeconds : 0;
+        shader.u["uTime"].value = Parameters.time ? getTime() : 0;
         shader.u["uSharpness"].value = Parameters.sharpness;
         shader.u["uThreshold"].value = 1 - Parameters.density;
 

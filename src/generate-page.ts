@@ -32,6 +32,15 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Range,
+                    title: "Speed",
+                    id: "speed-range-id",
+                    min: 0,
+                    max: 10,
+                    value: 1,
+                    step: 0.1
+                },
+                {
+                    type: Demopage.supportedControls.Range,
                     title: "Sharpness",
                     id: "sharpness-range-id",
                     min: 0,

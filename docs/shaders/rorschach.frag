@@ -89,7 +89,7 @@ void main(void)
     const vec3 backgroundColor = vec3(1);
     const vec3 inkColor = vec3(0);
 
-    vec3 coordsRorschach = vec3(vUv, 0.1 * uTime);
+    vec3 coordsRorschach = vec3(vUv, 0.01 * uTime);
     coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
     float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
 
