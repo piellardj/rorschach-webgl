@@ -124,7 +124,7 @@ void main(void)
     adjustedUv /= 1.0 + (1.0 - 2.8 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
     adjustedUv = mix(vUv, adjustedUv, uWatchmenMode);
 
-    float watchmenNoiseMask = smoothstep(0.5, 3.0, abs(adjustedUv.x)); // less noise on the sides (ears)
+    float watchmenNoiseMask = smoothstep(0.5, 2.5, abs(adjustedUv.x)) + smoothstep(0.75, 1.5, -adjustedUv.y); // less noise on the ears and jaw
     float classicNoiseMask = smoothstep(0.6, 2.0, max(abs(vCanvasUV.x), abs(vCanvasUV.y))); // less noise near the canvas border
     float noiseMask = mix(classicNoiseMask, watchmenNoiseMask, uWatchmenMode);
 
