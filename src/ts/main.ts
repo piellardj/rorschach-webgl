@@ -13,7 +13,7 @@ import "./page-interface-generated";
 function main(): void {
     let shader: Shader;
 
-    function clearCanvas(): void {
+    function adjustToCanvasSize(): void {
         GLCanvas.adjustSize();
         Viewport.setFullCanvas(gl);
 
@@ -23,12 +23,16 @@ function main(): void {
         } else if (aspectRatio < 1) {
             shader.u["uCoordsAdjustment"].value = [1, 1 / aspectRatio];
         }
-
-        gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
+    let canvasSizeChanged = true;
+    Page.Canvas.Observers.canvasResize.push(() => canvasSizeChanged = true);
+
     function mainLoop(): void {
-        clearCanvas();
+        if (canvasSizeChanged) {
+            adjustToCanvasSize();
+            canvasSizeChanged = false;
+        }
 
         shader.u["uTime"].value = Parameters.time ? getTime() : 0;
         shader.u["uSharpness"].value = Parameters.sharpness;
@@ -48,7 +52,6 @@ function main(): void {
     if (!GLCanvas.initGL()) {
         return;
     }
-    gl.clearColor(0, 1, 0, 1);
 
     Page.Canvas.showLoader(true);
     ShaderManager.buildShader(
