@@ -8,6 +8,7 @@ uniform float uWatchmenMode; // expected to be in {0, 1}
 // [0,0] should be the center of the canvas
 // [-1,1]^2 should be the biggest square that fits the canvas
 varying vec2 vUv;
+varying vec2 vCanvasUV; // in [-1,1]^2
 
 // returns a random in [-0.5, 0.5]^3, centered on {0}^3
 vec3 random(vec3 i) {
@@ -88,7 +89,7 @@ float layeredNoise(vec3 coords)
     return result;
 }
 
-float computeInkIntensity(vec2 uv)
+float computeInkIntensity(vec2 uv, float noiseMask)
 {
     vec3 coordsRorschach = vec3(uv, 0.01 * uTime);
     coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
@@ -99,7 +100,7 @@ float computeInkIntensity(vec2 uv)
     float noiseSupport = gradientNoise(coordsSupport, 25.0);
     float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.08, abs(uv.x)));
 
-    float inkNoise = noiseRorschach + noiseSupportFactor * noiseSupport;
+    float inkNoise = noiseRorschach + noiseSupportFactor * noiseSupport - noiseMask;
     return smoothstep(uSharpness * uThreshold, uThreshold, inkNoise);
 }
 
@@ -123,7 +124,11 @@ void main(void)
     adjustedUv /= 1.0 + (1.0 - 2.8 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
     adjustedUv = mix(vUv, adjustedUv, uWatchmenMode);
 
-    float inkIntensity = computeInkIntensity(adjustedUv);
+    float watchmenNoiseMask = smoothstep(0.5, 3.0, abs(adjustedUv.x)); // less noise on the sides (ears)
+    float classicNoiseMask = smoothstep(0.6, 2.0, max(abs(vCanvasUV.x), abs(vCanvasUV.y))); // less noise near the canvas border
+    float noiseMask = mix(classicNoiseMask, watchmenNoiseMask, uWatchmenMode);
+
+    float inkIntensity = computeInkIntensity(adjustedUv, noiseMask);
     vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 
     vec4 watchmenColorMask = computeWatchmenColorMask();
