@@ -17,7 +17,12 @@ function main(): void {
         GLCanvas.adjustSize();
         Viewport.setFullCanvas(gl);
 
-        shader.u["uAspectRatio"].value = Page.Canvas.getAspectRatio();
+        const aspectRatio = Page.Canvas.getAspectRatio();
+        if (aspectRatio >= 1) {
+            shader.u["uCoordsAdjustment"].value = [aspectRatio, 1];
+        } else if (aspectRatio < 1) {
+            shader.u["uCoordsAdjustment"].value = [1, 1 / aspectRatio];
+        }
 
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
