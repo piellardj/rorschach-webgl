@@ -11,6 +11,9 @@ const data = {
     ],
     githubProjectName: "rorschach-webgl",
     additionalLinks: [],
+    styleFiles: [
+        "css/main.css"
+    ],
     scriptFiles: [
         "script/main.min.js"
     ],
@@ -57,6 +60,12 @@ const data = {
                     value: 0.44,
                     step: 0.01
                 },
+                {
+                    type: Demopage.supportedControls.Checkbox,
+                    title: "Watchmen",
+                    id: "watchmen-mode-checkbox-id",
+                    checked: false
+                },
             ],
         }
     ]
@@ -77,3 +86,5 @@ const SCRIPT_DECLARATION_FILEPATH = path.join(SRC_DIR, "ts", "page-interface-gen
 fs.writeFileSync(SCRIPT_DECLARATION_FILEPATH, buildResult.pageScriptDeclaration);
 
 fse.copySync(path.join(SRC_DIR, "shaders"), path.join(DEST_DIR, "shaders"));
+fse.copySync(path.join(SRC_DIR, "resources"), path.join(DEST_DIR, "resources"));
+fse.copySync(path.join(SRC_DIR, "css", "main.css"), path.join(DEST_DIR, "css", "main.css"));

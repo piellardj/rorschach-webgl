@@ -6,6 +6,7 @@ import { Shader } from "./gl-utils/shader";
 import { VBO } from "./gl-utils/vbo";
 import { Parameters } from "./parameters";
 import { getTime } from "./time";
+import * as RorschachFace from "./rorschach-face";
 
 import "./page-interface-generated";
 
@@ -27,6 +28,7 @@ function main(): void {
         shader.u["uTime"].value = Parameters.time ? getTime() : 0;
         shader.u["uSharpness"].value = Parameters.sharpness;
         shader.u["uThreshold"].value = 1 - Parameters.density;
+        shader.u["uWatchmenMode"].value = Parameters.watchmenMode ? 1 : 0;
 
         shader.bindUniforms();
 
@@ -34,6 +36,9 @@ function main(): void {
 
         requestAnimationFrame(mainLoop);
     }
+
+    Parameters.addWatchmenModeChange(RorschachFace.setVisibility);
+    RorschachFace.setVisibility(Parameters.watchmenMode);
 
     if (!GLCanvas.initGL()) {
         return;

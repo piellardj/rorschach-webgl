@@ -3,6 +3,7 @@ precision lowp float;
 uniform float uTime;
 uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
+uniform float uWatchmenMode; // expected to be in {0, 1}
 
 varying vec2 vUv; // [0,0] should be the center of the canvas
 
@@ -102,6 +103,11 @@ void main(void)
     float ink = smoothstep(uSharpness * uThreshold, uThreshold, noise);
 
     vec3 color = mix(backgroundColor, inkColor, ink);
+
+    float distanceToCenterSq = dot(vUv, vUv);
+    const float maxDistanceToCenterSq = 0.2304; // 0.48 * 0.48
+    vec4 watchmenColor = step(maxDistanceToCenterSq, distanceToCenterSq) * vec4(0.965, 0.930, 0.533, uWatchmenMode);
+    color = mix(color, watchmenColor.rgb, watchmenColor.a);
 
     gl_FragColor = vec4(color, 1.0);
 }

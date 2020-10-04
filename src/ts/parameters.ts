@@ -6,6 +6,7 @@ const controlId = {
     SPEED: "speed-range-id",
     SHARPNESS: "sharpness-range-id",
     DENSITY: "density-range-id",
+    WATCHMEN_MODE: "watchmen-mode-checkbox-id",
 };
 
 abstract class Parameters {
@@ -27,6 +28,13 @@ abstract class Parameters {
 
     public static get density(): number {
         return Page.Range.getValue(controlId.DENSITY);
+    }
+
+    public static get watchmenMode(): boolean {
+        return Page.Checkbox.isChecked(controlId.WATCHMEN_MODE);
+    }
+    public static addWatchmenModeChange(callback: (enabled: boolean) => unknown): void {
+        Page.Checkbox.addObserver(controlId.WATCHMEN_MODE, callback);
     }
 }
 
