@@ -67,6 +67,8 @@ function main(): void {
                 shader.use();
                 shader.bindAttributes();
 
+                shader.u["uSeed"].value = Math.random() * 200 - 100;
+
                 Page.Canvas.showLoader(false);
                 requestAnimationFrame(mainLoop);
             } else {

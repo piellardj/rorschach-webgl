@@ -1,5 +1,6 @@
 precision lowp float;
 
+uniform float uSeed; // expected to be approximately in [-100, 100]
 uniform float uTime;
 uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
@@ -91,7 +92,7 @@ float layeredNoise(vec3 coords)
 
 float computeInkIntensity(vec2 uv, float noiseMask)
 {
-    vec3 coordsRorschach = vec3(uv, 0.02 * uTime);
+    vec3 coordsRorschach = vec3(uv.x, uv.y + uSeed, 0.02 * uTime);
     coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
     float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
 
