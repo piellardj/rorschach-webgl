@@ -5,9 +5,11 @@ uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
 uniform float uWatchmenMode; // expected to be in {0, 1}
 
-varying vec2 vUv; // [0,0] should be the center of the canvas
+// [0,0] should be the center of the canvas
+// [-1,1]^2 should be the biggest square that fits the canvas
+varying vec2 vUv;
 
-// returns a value in [-0.5, 0.5]^3
+// returns a random in [-0.5, 0.5]^3, centered on {0}^3
 vec3 random(vec3 i) {
     // the seeds are arbitrary values that look good
     const vec3 seed1 = vec3(31.06, 19.86, 30.19);
@@ -71,7 +73,7 @@ float layeredNoise(vec3 coords)
     float result = 0.0;
 
     float amplitude = 0.5;
-    float scale = 5.0;
+    float scale = 2.5;
 
     for (int i = 0; i < 5; i++)
     {
@@ -96,8 +98,8 @@ void main(void)
 
     // weaker additional noise to break the symmetry
     vec3 coordsSupport = vec3(vUv, 0.001 * uTime);
-    float noiseSupport = gradientNoise(coordsSupport, 50.0);
-    float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.04, abs(vUv.x)));
+    float noiseSupport = gradientNoise(coordsSupport, 25.0);
+    float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.08, abs(vUv.x)));
 
     float noise = noiseRorschach + noiseSupportFactor * noiseSupport;
     float ink = smoothstep(uSharpness * uThreshold, uThreshold, noise);
@@ -105,7 +107,7 @@ void main(void)
     vec3 color = mix(backgroundColor, inkColor, ink);
 
     float distanceToCenterSq = dot(vUv, vUv);
-    const float maxDistanceToCenterSq = 0.2304; // 0.48 * 0.48
+    const float maxDistanceToCenterSq = 0.9216; // 0.96 * 0.96
     vec4 watchmenColor = step(maxDistanceToCenterSq, distanceToCenterSq) * vec4(0.965, 0.930, 0.533, uWatchmenMode);
     color = mix(color, watchmenColor.rgb, watchmenColor.a);
 
