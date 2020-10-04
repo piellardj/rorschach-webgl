@@ -117,7 +117,13 @@ void main(void)
     const vec3 backgroundColor = vec3(1);
     const vec3 inkColor = vec3(0.1);
 
-    float inkIntensity = computeInkIntensity(vUv);
+    // adjust UV grid to the face of Rorschach, so that [-1,1]^2 fits the whole head
+    vec2 adjustedUv = 2.0 * (vUv - 0.0);
+    adjustedUv.x *= 1.0 + 0.2 * smoothstep(0.0, 0.2, adjustedUv.x); // the head is slightly looking to its left, so offset the grid
+    adjustedUv /= 1.0 + (1.0 - 2.8 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
+    adjustedUv = mix(vUv, adjustedUv, uWatchmenMode);
+
+    float inkIntensity = computeInkIntensity(adjustedUv);
     vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 
     vec4 watchmenColorMask = computeWatchmenColorMask();
