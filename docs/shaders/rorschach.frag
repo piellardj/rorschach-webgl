@@ -68,6 +68,7 @@ float gradientNoise(vec3 coords, float scale)
     return noiseXXX;
 }
 
+// returns a random value centered on 0
 float layeredNoise(vec3 coords)
 {
     float result = 0.0;
@@ -87,29 +88,40 @@ float layeredNoise(vec3 coords)
     return result;
 }
 
+float computeInkIntensity(vec2 uv)
+{
+    vec3 coordsRorschach = vec3(uv, 0.01 * uTime);
+    coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
+    float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
+
+    // weaker additional noise to break the symmetry
+    vec3 coordsSupport = vec3(uv, 0.001 * uTime);
+    float noiseSupport = gradientNoise(coordsSupport, 25.0);
+    float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.08, abs(uv.x)));
+
+    float inkNoise = noiseRorschach + noiseSupportFactor * noiseSupport;
+    return smoothstep(uSharpness * uThreshold, uThreshold, inkNoise);
+}
+
+vec4 computeWatchmenColorMask()
+{
+    const vec3 watchmenColor = vec3(0.965, 0.930, 0.533);
+    const float visibleRadius = 0.96;
+    float distanceToCenterSq = dot(vUv, vUv);
+    float mask = uWatchmenMode * step(visibleRadius * visibleRadius, distanceToCenterSq);
+    return vec4(watchmenColor, mask);
+}
+
 void main(void)
 {
     const vec3 backgroundColor = vec3(1);
     const vec3 inkColor = vec3(0.1);
 
-    vec3 coordsRorschach = vec3(vUv, 0.01 * uTime);
-    coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
-    float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
+    float inkIntensity = computeInkIntensity(vUv);
+    vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 
-    // weaker additional noise to break the symmetry
-    vec3 coordsSupport = vec3(vUv, 0.001 * uTime);
-    float noiseSupport = gradientNoise(coordsSupport, 25.0);
-    float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.08, abs(vUv.x)));
-
-    float noise = noiseRorschach + noiseSupportFactor * noiseSupport;
-    float ink = smoothstep(uSharpness * uThreshold, uThreshold, noise);
-
-    vec3 color = mix(backgroundColor, inkColor, ink);
-
-    float distanceToCenterSq = dot(vUv, vUv);
-    const float maxDistanceToCenterSq = 0.9216; // 0.96 * 0.96
-    vec4 watchmenColor = step(maxDistanceToCenterSq, distanceToCenterSq) * vec4(0.965, 0.930, 0.533, uWatchmenMode);
-    color = mix(color, watchmenColor.rgb, watchmenColor.a);
+    vec4 watchmenColorMask = computeWatchmenColorMask();
+    color = mix(color, watchmenColorMask.rgb, watchmenColorMask.a);
 
     gl_FragColor = vec4(color, 1.0);
 }
