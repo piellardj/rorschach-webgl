@@ -91,7 +91,7 @@ float layeredNoise(vec3 coords)
 
 float computeInkIntensity(vec2 uv, float noiseMask)
 {
-    vec3 coordsRorschach = vec3(uv, 0.01 * uTime);
+    vec3 coordsRorschach = vec3(uv, 0.02 * uTime);
     coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
     float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
 
