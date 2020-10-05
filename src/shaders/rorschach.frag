@@ -4,10 +4,11 @@
   precision mediump float;
 #endif
 
+#define WATCHMEN_MODE #INJECT(WATCHMEN_MODE_ID)
+
 uniform float uTime;
 uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
-uniform float uWatchmenMode; // expected to be in {0, 1}
 
 // [0,0] should be the center of the canvas
 // [-1,1]^2 should be the biggest square that fits the canvas
@@ -110,35 +111,34 @@ float computeInkIntensity(vec2 uv, float noiseMask)
     return smoothstep(uSharpness * uThreshold, uThreshold, inkNoise);
 }
 
-vec4 computeWatchmenColorMask()
-{
-    const vec3 watchmenColor = vec3(0.965, 0.930, 0.533);
-    const float visibleRadius = 0.96;
-    float distanceToCenterSq = dot(vUv, vUv);
-    float mask = uWatchmenMode * step(visibleRadius * visibleRadius, distanceToCenterSq);
-    return vec4(watchmenColor, mask);
-}
-
 void main(void)
 {
     const vec3 backgroundColor = vec3(1);
     const vec3 inkColor = vec3(0.1);
 
+#if WATCHMEN_MODE==1
     // adjust UV grid to the face of Rorschach, so that [-1,1]^2 fits the whole head
     vec2 adjustedUv = 2.0 * (vUv - 0.0);
     adjustedUv.x *= 1.0 + 0.2 * smoothstep(0.0, 0.2, adjustedUv.x); // the head is slightly looking to its left, so offset the grid
     adjustedUv /= 1.0 + (1.0 - 2.8 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
-    adjustedUv = mix(vUv, adjustedUv, uWatchmenMode);
 
-    float watchmenNoiseMask = smoothstep(0.5, 2.5, abs(adjustedUv.x)) + smoothstep(0.75, 1.5, -adjustedUv.y); // less noise on the ears and jaw
-    float classicNoiseMask = smoothstep(0.6, 2.0, max(abs(vCanvasUV.x), abs(vCanvasUV.y))); // less noise near the canvas border
-    float noiseMask = mix(classicNoiseMask, watchmenNoiseMask, uWatchmenMode);
-
+    float noiseMask = smoothstep(0.5, 2.5, abs(adjustedUv.x)) + smoothstep(0.75, 1.5, -adjustedUv.y); // less noise on the ears and jaw
     float inkIntensity = computeInkIntensity(adjustedUv, noiseMask);
     vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 
-    vec4 watchmenColorMask = computeWatchmenColorMask();
-    color = mix(color, watchmenColorMask.rgb, watchmenColorMask.a);
+    // fill canvas with yellow on parts that are not covered by the SVG background
+    const vec3 watchmenColor = vec3(0.965, 0.930, 0.533);
+    const float visibleRadius = 0.96;
+    float distanceToCenterSq = dot(vUv, vUv);
+    float isOutsideDisk = step(visibleRadius * visibleRadius, distanceToCenterSq);
+    color = mix(color, watchmenColor, isOutsideDisk);
+
+#else // WATCHMEN_MODE!=1
+
+    float noiseMask = smoothstep(0.6, 2.0, max(abs(vCanvasUV.x), abs(vCanvasUV.y))); // less noise near the canvas border
+    float inkIntensity = computeInkIntensity(vUv, noiseMask);
+    vec3 color = mix(backgroundColor, inkColor, inkIntensity);
+#endif // WATCHMEN_MODE
 
     gl_FragColor = vec4(color, 1.0);
 }
