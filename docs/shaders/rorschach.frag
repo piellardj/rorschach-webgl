@@ -9,6 +9,7 @@
 uniform float uTime;
 uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
+uniform float uScale;
 
 // [0,0] should be the center of the canvas
 // [-1,1]^2 should be the biggest square that fits the canvas
@@ -96,6 +97,8 @@ float layeredNoise(vec3 coords)
 
 float computeInkIntensity(vec2 uv, float noiseMask)
 {
+    uv *= uScale;
+
     const float SEED = #INJECT(SEED); // injected at compile time
 
     vec3 coordsRorschach = vec3(uv.x, uv.y + SEED, 0.02 * uTime);

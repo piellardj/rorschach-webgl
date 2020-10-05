@@ -44,6 +44,7 @@ function main(): void {
         currentShader.u["uTime"].value = Parameters.time ? getTime() : 0;
         currentShader.u["uSharpness"].value = Parameters.sharpness;
         currentShader.u["uThreshold"].value = 1 - Parameters.density;
+        currentShader.u["uScale"].value = Parameters.scale;
         currentShader.bindUniforms();
 
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);

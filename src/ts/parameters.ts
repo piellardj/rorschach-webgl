@@ -7,7 +7,8 @@ const controlId = {
     SHARPNESS: "sharpness-range-id",
     DENSITY: "density-range-id",
     WATCHMEN_MODE: "watchmen-mode-checkbox-id",
-    HIGH_DPI: "high-dpi-checkbox-id"
+    HIGH_DPI: "high-dpi-checkbox-id",
+    SCALE: "scale-range-id",
 };
 
 
@@ -48,6 +49,10 @@ abstract class Parameters {
     public static addResizeObserver(callback: () => unknown): void {
         Page.Checkbox.addObserver(controlId.HIGH_DPI, callback);
         Page.Canvas.Observers.canvasResize.push(callback);
+    }
+
+    public static get scale(): number {
+        return Page.Range.getValue(controlId.SCALE);
     }
 }
 
