@@ -53,12 +53,15 @@ function main(): void {
         return;
     }
 
+    const randomScalar = Math.random() * 200 - 100;
     Page.Canvas.showLoader(true);
     ShaderManager.buildShader(
         {
             fragmentFilename: "rorschach.frag",
             vertexFilename: "rorschach.vert",
-            injected: {},
+            injected: {
+                SEED: randomScalar.toString(),
+            },
         },
         (builtShader: Shader | null) => {
             if (builtShader !== null) {
@@ -66,8 +69,6 @@ function main(): void {
                 shader.a["aCoords"].VBO = VBO.createQuad(gl, -1, -1, 1, 1);
                 shader.use();
                 shader.bindAttributes();
-
-                shader.u["uSeed"].value = Math.random() * 200 - 100;
 
                 Page.Canvas.showLoader(false);
                 requestAnimationFrame(mainLoop);
