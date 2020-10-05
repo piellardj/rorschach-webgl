@@ -1,4 +1,8 @@
-precision lowp float;
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+  precision highp float;
+#else
+  precision mediump float;
+#endif
 
 uniform float uSeed; // expected to be approximately in [-100, 100]
 uniform float uTime;
