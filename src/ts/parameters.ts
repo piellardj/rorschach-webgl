@@ -9,6 +9,7 @@ const controlId = {
     WATCHMEN_MODE: "watchmen-mode-checkbox-id",
     HIGH_DPI: "high-dpi-checkbox-id",
     SCALE: "scale-range-id",
+    SYMETRY: "symetry-range-id",
 };
 
 
@@ -53,6 +54,10 @@ abstract class Parameters {
 
     public static get scale(): number {
         return Page.Range.getValue(controlId.SCALE);
+    }
+
+    public static get symetry(): number {
+        return 2 * Page.Range.getValue(controlId.SYMETRY) - 1;
     }
 }
 

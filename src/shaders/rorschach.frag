@@ -10,6 +10,7 @@ uniform float uTime;
 uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
 uniform float uScale;
+uniform float uSymetry; // expected to be in [0, 1]
 
 // [0,0] should be the center of the canvas
 // [-1,1]^2 should be the biggest square that fits the canvas
@@ -102,13 +103,14 @@ float computeInkIntensity(vec2 uv, float noiseMask)
     const float SEED = #INJECT(SEED); // injected at compile time
 
     vec3 coordsRorschach = vec3(uv.x, uv.y + SEED, 0.02 * uTime);
-    coordsRorschach.x = abs(coordsRorschach.x); // horizontal symmetry
+    coordsRorschach.x = abs(coordsRorschach.x); // horizontal symetry
     float noiseRorschach = layeredNoise(coordsRorschach) + 0.5;
 
-    // weaker additional noise to break the symmetry
+    // weaker additional noise to break the symetry
     vec3 coordsSupport = vec3(uv, 0.001 * uTime);
     float noiseSupport = gradientNoise(coordsSupport, 25.0);
     float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.08, abs(uv.x)));
+    noiseSupportFactor *= 1.0 - uSymetry;
 
     float inkNoise = noiseRorschach + noiseSupportFactor * noiseSupport - noiseMask;
     return smoothstep(uSharpness * uThreshold, uThreshold, inkNoise);

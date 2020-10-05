@@ -62,6 +62,15 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Range,
+                    title: "Symetry",
+                    id: "symetry-range-id",
+                    min: 0.5,
+                    max: 1,
+                    value: 0.5,
+                    step: 0.01
+                },
+                {
+                    type: Demopage.supportedControls.Range,
                     title: "Scale",
                     id: "scale-range-id",
                     min: 0.5,
