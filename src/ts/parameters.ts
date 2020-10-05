@@ -7,7 +7,11 @@ const controlId = {
     SHARPNESS: "sharpness-range-id",
     DENSITY: "density-range-id",
     WATCHMEN_MODE: "watchmen-mode-checkbox-id",
+    HIGH_DPI: "high-dpi-checkbox-id"
 };
+
+
+Page.Controls.setVisibility(controlId.HIGH_DPI, window.devicePixelRatio > 1);
 
 abstract class Parameters {
     public static get time(): boolean {
@@ -35,6 +39,15 @@ abstract class Parameters {
     }
     public static addWatchmenModeChange(callback: (enabled: boolean) => unknown): void {
         Page.Checkbox.addObserver(controlId.WATCHMEN_MODE, callback);
+    }
+
+    public static get supportHighDPI(): boolean {
+        return Page.Checkbox.isChecked(controlId.HIGH_DPI);
+    }
+
+    public static addResizeObserver(callback: () => unknown): void {
+        Page.Checkbox.addObserver(controlId.HIGH_DPI, callback);
+        Page.Canvas.Observers.canvasResize.push(callback);
     }
 }
 

@@ -16,7 +16,7 @@ function main(): void {
     }
 
     function adjustToCanvasSize(shader: Shader): void {
-        GLCanvas.adjustSize();
+        GLCanvas.adjustSize(Parameters.supportHighDPI);
         Viewport.setFullCanvas(gl);
 
         const aspectRatio = Page.Canvas.getAspectRatio();
@@ -28,7 +28,7 @@ function main(): void {
     }
 
     let canvasSizeChanged = true;
-    Page.Canvas.Observers.canvasResize.push(() => canvasSizeChanged = true);
+    Parameters.addResizeObserver(() => canvasSizeChanged = true);
 
     function mainLoop(): void {
         const currentMode = Parameters.watchmenMode ? ShaderPicker.EMode.WATCHMEN : ShaderPicker.EMode.CLASSIC;

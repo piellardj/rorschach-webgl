@@ -66,6 +66,12 @@ const data = {
                     id: "watchmen-mode-checkbox-id",
                     checked: false
                 },
+                {
+                    type: Demopage.supportedControls.Checkbox,
+                    title: "High DPI",
+                    id: "high-dpi-checkbox-id",
+                    checked: false
+                },
             ],
         }
     ]
