@@ -31,9 +31,6 @@ float gradientNoise(const vec3 coords)
 {
     vec3 floorCoords = floor(coords);
     vec3 ceilCoords = ceil(coords);
-    vec3 fractCoords = fract(coords);
-    // Quintic Hermite interpolation
-    vec3 coefficients = fractCoords*fractCoords*fractCoords*(fractCoords*(6.0 * fractCoords - 15.0) + 10.0);
 
     vec3 coords000 = floorCoords;
     vec3 coords001 = vec3(floorCoords.xy, ceilCoords.z);
@@ -61,6 +58,10 @@ float gradientNoise(const vec3 coords)
     float noise101 = dot(gradient101, coords - coords101);
     float noise110 = dot(gradient110, coords - coords110);
     float noise111 = dot(gradient111, coords - coords111);
+
+    vec3 fractCoords = fract(coords);
+    // Quintic Hermite interpolation
+    vec3 coefficients = fractCoords*fractCoords*fractCoords*(fractCoords*(6.0 * fractCoords - 15.0) + 10.0);
 
     float noiseX00 = mix(noise000, noise100, coefficients.x);
     float noiseX01 = mix(noise001, noise101, coefficients.x);
