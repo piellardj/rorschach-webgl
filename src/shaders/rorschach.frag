@@ -146,6 +146,5 @@ void main(void)
     vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 #endif // WATCHMEN_MODE
 
-    // color = vec3(noiseMask);
     gl_FragColor = vec4(color, 1.0);
 }
