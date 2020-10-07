@@ -30,36 +30,26 @@ vec3 random(vec3 i) {
 float gradientNoise(const vec3 coords)
 {
     vec3 floorCoords = floor(coords);
-    vec3 ceilCoords = ceil(coords);
-
-    vec3 coords000 = floorCoords;
-    vec3 coords001 = vec3(floorCoords.xy, ceilCoords.z);
-    vec3 coords010 = vec3(floorCoords.x, ceilCoords.y, floorCoords.z);
-    vec3 coords011 = vec3(floorCoords.x, ceilCoords.yz);
-    vec3 coords100 = vec3(ceilCoords.x, floorCoords.yz);
-    vec3 coords101 = vec3(ceilCoords.x, floorCoords.y, ceilCoords.z);
-    vec3 coords110 = vec3(ceilCoords.xy, floorCoords.z);
-    vec3 coords111 = ceilCoords;
-
-    vec3 gradient000 = random(coords000);
-    vec3 gradient001 = random(coords001);
-    vec3 gradient010 = random(coords010);
-    vec3 gradient011 = random(coords011);
-    vec3 gradient100 = random(coords100);
-    vec3 gradient101 = random(coords101);
-    vec3 gradient110 = random(coords110);
-    vec3 gradient111 = random(coords111);
-
-    float noise000 = dot(gradient000, coords - coords000);
-    float noise001 = dot(gradient001, coords - coords001);
-    float noise010 = dot(gradient010, coords - coords010);
-    float noise011 = dot(gradient011, coords - coords011);
-    float noise100 = dot(gradient100, coords - coords100);
-    float noise101 = dot(gradient101, coords - coords101);
-    float noise110 = dot(gradient110, coords - coords110);
-    float noise111 = dot(gradient111, coords - coords111);
-
     vec3 fractCoords = fract(coords);
+
+    vec3 gradient000 = random(floorCoords + vec3(0,0,0));
+    vec3 gradient001 = random(floorCoords + vec3(0,0,1));
+    vec3 gradient010 = random(floorCoords + vec3(0,1,0));
+    vec3 gradient011 = random(floorCoords + vec3(0,1,1));
+    vec3 gradient100 = random(floorCoords + vec3(1,0,0));
+    vec3 gradient101 = random(floorCoords + vec3(1,0,1));
+    vec3 gradient110 = random(floorCoords + vec3(1,1,0));
+    vec3 gradient111 = random(floorCoords + vec3(1,1,1));
+
+    float noise000 = dot(gradient000, fractCoords - vec3(0,0,0));
+    float noise001 = dot(gradient001, fractCoords - vec3(0,0,1));
+    float noise010 = dot(gradient010, fractCoords - vec3(0,1,0));
+    float noise011 = dot(gradient011, fractCoords - vec3(0,1,1));
+    float noise100 = dot(gradient100, fractCoords - vec3(1,0,0));
+    float noise101 = dot(gradient101, fractCoords - vec3(1,0,1));
+    float noise110 = dot(gradient110, fractCoords - vec3(1,1,0));
+    float noise111 = dot(gradient111, fractCoords - vec3(1,1,1));
+
     // Quintic Hermite interpolation
     vec3 coefficients = fractCoords*fractCoords*fractCoords*(fractCoords*(6.0 * fractCoords - 15.0) + 10.0);
 
