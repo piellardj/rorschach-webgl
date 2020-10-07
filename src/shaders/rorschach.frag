@@ -34,7 +34,8 @@ float gradientNoise(vec3 coords, float scale)
     vec3 floorCoords = floor(coords);
     vec3 ceilCoords = ceil(coords);
     vec3 fractCoords = fract(coords);
-    vec3 coefficients = smoothstep(0.0, 1.0, fractCoords);
+    // Quintic Hermite interpolation
+    vec3 coefficients = fractCoords*fractCoords*fractCoords*(fractCoords*(6.0 * fractCoords - 15.0) + 10.0);
 
     vec3 coords000 = floorCoords;
     vec3 coords001 = vec3(floorCoords.xy, ceilCoords.z);
