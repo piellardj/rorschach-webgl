@@ -27,10 +27,8 @@ vec3 random(vec3 i) {
 }
 
 // returns a value in [-0.5, 0.5]
-float gradientNoise(vec3 coords, float scale)
+float gradientNoise(const vec3 coords)
 {
-    coords *= scale;
-
     vec3 floorCoords = floor(coords);
     vec3 ceilCoords = ceil(coords);
     vec3 fractCoords = fract(coords);
@@ -78,16 +76,17 @@ float gradientNoise(vec3 coords, float scale)
 }
 
 // returns a random value centered on 0
-float layeredNoise(vec3 coords)
+float layeredNoise(const vec3 coords)
 {
     float result = 0.0;
 
     float amplitude = 0.5;
     float scale = 2.5;
 
+    
     for (int i = 0; i < 5; i++)
     {
-        float noise = gradientNoise(coords, scale);
+        float noise = gradientNoise(coords * scale);
         result += amplitude * noise;
 
         amplitude *= 0.5;
@@ -109,7 +108,7 @@ float computeInkIntensity(vec2 uv, float noiseMask)
 
     // weaker additional noise to break the symetry
     vec3 coordsSupport = vec3(uv, 0.001 * uTime);
-    float noiseSupport = gradientNoise(coordsSupport, 25.0);
+    float noiseSupport = gradientNoise(coordsSupport * 25.0);
     float noiseSupportFactor = 0.03 + 0.08 * (1.0 - smoothstep(0.0, 0.08, abs(uv.x)));
     noiseSupportFactor *= 1.0 - uSymetry;
 
