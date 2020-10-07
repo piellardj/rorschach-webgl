@@ -127,7 +127,7 @@ void main(void)
     adjustedUv.x *= 1.0 + 0.2 * smoothstep(0.0, 0.2, adjustedUv.x); // the head is slightly looking to its left, so offset the grid
     adjustedUv /= 1.0 + (1.0 - 3.0 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
 
-    float noiseMask = smoothstep(0.4, 2.0, abs(adjustedUv.x)) + smoothstep(0.7, 1.5, -adjustedUv.y); // less noise on the ears and jaw
+    float noiseMask = smoothstep(0.4, 2.0, abs(adjustedUv.x)) + smoothstep(0.7, 1.5, -adjustedUv.y) + smoothstep(-0.05, 1.0, adjustedUv.y); // less noise on the ears, jaw and forehead
     float inkIntensity = computeInkIntensity(adjustedUv, noiseMask);
     vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 
@@ -145,5 +145,6 @@ void main(void)
     vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 #endif // WATCHMEN_MODE
 
+    // color = vec3(noiseMask);
     gl_FragColor = vec4(color, 1.0);
 }
