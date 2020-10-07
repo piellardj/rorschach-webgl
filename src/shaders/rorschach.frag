@@ -125,14 +125,14 @@ void main(void)
     // adjust UV grid to the face of Rorschach, so that [-1,1]^2 fits the whole head
     vec2 adjustedUv = 2.0 * (vUv - 0.0);
     adjustedUv.x *= 1.0 + 0.2 * smoothstep(0.0, 0.2, adjustedUv.x); // the head is slightly looking to its left, so offset the grid
-    adjustedUv /= 1.0 + (1.0 - 2.8 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
+    adjustedUv /= 1.0 + (1.0 - 3.0 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
 
-    float noiseMask = smoothstep(0.5, 2.5, abs(adjustedUv.x)) + smoothstep(0.75, 1.5, -adjustedUv.y); // less noise on the ears and jaw
+    float noiseMask = smoothstep(0.4, 2.0, abs(adjustedUv.x)) + smoothstep(0.7, 1.5, -adjustedUv.y); // less noise on the ears and jaw
     float inkIntensity = computeInkIntensity(adjustedUv, noiseMask);
     vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 
     // fill canvas with yellow on parts that are not covered by the SVG background
-    const vec3 watchmenColor = vec3(0.965, 0.930, 0.533);
+    const vec3 watchmenColor = vec3(0.967, 0.930, 0.608);
     const float visibleRadius = 0.96;
     float distanceToCenterSq = dot(vUv, vUv);
     float isOutsideDisk = step(visibleRadius * visibleRadius, distanceToCenterSq);
