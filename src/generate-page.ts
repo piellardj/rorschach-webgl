@@ -57,7 +57,7 @@ const data = {
                     id: "density-range-id",
                     min: 0,
                     max: 1,
-                    value: 0.44,
+                    value: 0.5,
                     step: 0.01
                 },
                 {
@@ -65,7 +65,7 @@ const data = {
                     title: "Symetry",
                     id: "symetry-range-id",
                     min: 0.5,
-                    max: 1,
+                    max: 0.5,
                     value: 0.5,
                     step: 0.01
                 },
@@ -84,14 +84,14 @@ const data = {
                     id: "details-range-id",
                     min: 1,
                     max: 5,
-                    value: 3,
+                    value: 4.5,
                     step: 0.01
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,
                     title: "Watchmen",
                     id: "watchmen-mode-checkbox-id",
-                    checked: false
+                    checked: true
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,
