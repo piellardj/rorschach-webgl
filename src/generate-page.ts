@@ -79,6 +79,15 @@ const data = {
                     step: 0.5
                 },
                 {
+                    type: Demopage.supportedControls.Range,
+                    title: "Details",
+                    id: "details-range-id",
+                    min: 1,
+                    max: 5,
+                    value: 3,
+                    step: 0.01
+                },
+                {
                     type: Demopage.supportedControls.Checkbox,
                     title: "Watchmen",
                     id: "watchmen-mode-checkbox-id",

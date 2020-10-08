@@ -11,6 +11,7 @@ uniform float uSharpness; // expected to be in [0, 1]
 uniform float uThreshold; // expected to be in [0, 1]
 uniform float uScale;
 uniform float uSymetry; // expected to be in [0, 1]
+uniform float uMaxDetails; 
 
 // [0,0] should be the center of the canvas
 // [-1,1]^2 should be the biggest square that fits the canvas
@@ -78,10 +79,10 @@ float layeredNoise(const vec3 coords)
     for (int i = 0; i < 5; i++)
     {
         float noise = gradientNoise(coords * scale);
-        result += amplitude * noise;
+        result += amplitude * noise * smoothstep(0.0, 1.0, uMaxDetails - float(i));
 
         amplitude *= 0.5;
-        scale *= 2.0;
+        scale *= 2.3;
     }
 
     return result;

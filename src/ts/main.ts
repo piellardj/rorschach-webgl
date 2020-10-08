@@ -46,6 +46,7 @@ function main(): void {
         currentShader.u["uThreshold"].value = 1 - Parameters.density;
         currentShader.u["uScale"].value = Parameters.scale;
         currentShader.u["uSymetry"].value = Parameters.symetry;
+        currentShader.u["uMaxDetails"].value = Parameters.details;
 
         currentShader.bindUniforms();
 

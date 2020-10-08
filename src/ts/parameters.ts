@@ -10,6 +10,7 @@ const controlId = {
     HIGH_DPI: "high-dpi-checkbox-id",
     SCALE: "scale-range-id",
     SYMETRY: "symetry-range-id",
+    DETAILS: "details-range-id"
 };
 
 
@@ -58,6 +59,10 @@ abstract class Parameters {
 
     public static get symetry(): number {
         return 2 * Page.Range.getValue(controlId.SYMETRY) - 1;
+    }
+
+    public static get details(): number {
+        return Page.Range.getValue(controlId.DETAILS);
     }
 }
 
