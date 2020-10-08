@@ -17,10 +17,6 @@ const controlId = {
 Page.Controls.setVisibility(controlId.HIGH_DPI, window.devicePixelRatio > 1);
 
 abstract class Parameters {
-    public static get time(): boolean {
-        return Page.Checkbox.isChecked(controlId.TIME);
-    }
-
     public static get speed(): number {
         return Page.Range.getValue(controlId.SPEED);
     }

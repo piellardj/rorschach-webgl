@@ -28,12 +28,6 @@ const data = {
             title: "Parameters",
             controls: [
                 {
-                    type: Demopage.supportedControls.Checkbox,
-                    title: "Time",
-                    id: "time-checkbox-id",
-                    checked: true
-                },
-                {
                     type: Demopage.supportedControls.Range,
                     title: "Speed",
                     id: "speed-range-id",
