@@ -38,6 +38,15 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Range,
+                    title: "Details",
+                    id: "details-range-id",
+                    min: 1,
+                    max: 5,
+                    value: 4.5,
+                    step: 0.01
+                },
+                {
+                    type: Demopage.supportedControls.Range,
                     title: "Sharpness",
                     id: "sharpness-range-id",
                     min: 0,
@@ -59,7 +68,7 @@ const data = {
                     title: "Symetry",
                     id: "symetry-range-id",
                     min: 0.5,
-                    max: 0.5,
+                    max: 1.0,
                     value: 0.5,
                     step: 0.01
                 },
@@ -71,15 +80,6 @@ const data = {
                     max: 10,
                     value: 1,
                     step: 0.5
-                },
-                {
-                    type: Demopage.supportedControls.Range,
-                    title: "Details",
-                    id: "details-range-id",
-                    min: 1,
-                    max: 5,
-                    value: 4.5,
-                    step: 0.01
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,
