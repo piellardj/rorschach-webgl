@@ -105,7 +105,7 @@ float computeInkIntensity(vec2 uv, float noiseMask)
     noiseSupportFactor *= 1.0 - uSymetry;
 
     float inkNoise = noiseRorschach + noiseSupportFactor * noiseSupport - noiseMask;
-    return smoothstep(uSharpness * uThreshold, uThreshold, inkNoise);
+    return smoothstep(-uSharpness, 0.0, inkNoise - uThreshold);
 }
 
 void main(void)
