@@ -15,10 +15,12 @@ function main(): void {
         return;
     }
 
-    function adjustToCanvasSize(shader: Shader): void {
+    function adjustCanvasSize(): void {
         GLCanvas.adjustSize(Parameters.supportHighDPI);
         Viewport.setFullCanvas(gl);
+    }
 
+    function adjustShaderToCanvas(shader: Shader): void {
         const aspectRatio = Page.Canvas.getAspectRatio();
         if (aspectRatio >= 1) {
             shader.u["uCoordsAdjustment"].value = [aspectRatio, 1];
@@ -35,9 +37,11 @@ function main(): void {
         const shaderChanged = ShaderPicker.enableShader(currentMode);
 
         const currentShader = ShaderPicker.getCurrentShader();
-
         if (canvasSizeChanged || shaderChanged) {
-            adjustToCanvasSize(currentShader);
+            adjustShaderToCanvas(currentShader);
+        }
+        if (canvasSizeChanged) {
+            adjustCanvasSize();
             canvasSizeChanged = false;
         }
 
