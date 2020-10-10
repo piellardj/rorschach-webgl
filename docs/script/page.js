@@ -312,7 +312,10 @@ var Page;
             var bodyRect = document.body.getBoundingClientRect();
             var rangeRect = range.getBoundingClientRect();
             var tooltipRect = tooltip.getBoundingClientRect();
-            var percentage = (+range.value - +range.min) / (+range.max - +range.min);
+            var percentage = 0;
+            if (+range.max > +range.min) {
+                percentage = (+range.value - +range.min) / (+range.max - +range.min);
+            }
             var top = (rangeRect.top - tooltipRect.height - bodyRect.top) - 4;
             var middle = percentage * (rangeRect.width - thumbSize) +
                 (rangeRect.left + 0.5 * thumbSize) - bodyRect.left;
