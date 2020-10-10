@@ -16,7 +16,9 @@ uniform float uMaxDetails;
 // [0,0] should be the center of the canvas
 // [-1,1]^2 should be the biggest square that fits the canvas
 varying vec2 vUv;
+#if WATCHMEN_MODE==0
 varying vec2 vCanvasUV; // in [-1,1]^2
+#endif //WATCHMEN_MODE==0
 
 // returns a random in [-0.5, 0.5]^3, centered on {0}^3
 vec3 random(vec3 i) {
@@ -115,29 +117,23 @@ void main(void)
     const vec3 inkColor = vec3(0.1);
 
     // adjust UV grid to the face of Rorschach, so that [-1,1]^2 fits the whole head
-    vec2 adjustedUv = 2.0 * (vUv - 0.0);
-    adjustedUv.x *= 1.0 + 0.2 * smoothstep(0.0, 0.2, adjustedUv.x); // the head is slightly looking to its left, so offset the grid
-    adjustedUv /= 1.0 + (1.0 - 3.0 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
+    vec2 inkUV = 2.0 * (vUv - 0.0);
+    inkUV.x *= 1.0 + 0.2 * smoothstep(0.0, 0.2, inkUV.x); // the head is slightly looking to its left, so offset the grid
+    inkUV /= 1.0 + (1.0 - 3.0 * vUv.x * vUv.x); // the head is a 3D object, so bend the grid to fit its shape
 
-    float noiseMask = smoothstep(0.4, 2.0, abs(adjustedUv.x)) + smoothstep(0.7, 1.5, -adjustedUv.y) + smoothstep(-0.05, 1.0, adjustedUv.y); // less noise on the ears, jaw and forehead
-    float inkIntensity = computeInkIntensity(adjustedUv, noiseMask);
-    vec3 color = mix(backgroundColor, inkColor, inkIntensity);
-
-    // fill canvas with yellow on parts that are not covered by the SVG background
-    const vec3 watchmenColor = vec3(0.967, 0.930, 0.608);
-    const float visibleRadius = 0.96;
-    float distanceToCenterSq = dot(vUv, vUv);
-    float isOutsideDisk = step(visibleRadius * visibleRadius, distanceToCenterSq);
-    color = mix(color, watchmenColor, isOutsideDisk);
+    float noiseMask = smoothstep(0.4, 2.0, abs(inkUV.x)) + smoothstep(0.7, 1.5, -inkUV.y) + smoothstep(-0.05, 1.0, inkUV.y); // less noise on the ears, jaw and forehead
 
 #else // WATCHMEN_MODE!=1
     const vec3 backgroundColor = vec3(.996, 0.985, 0.97);
     const vec3 inkColor = vec3(.1, .1, .2);
 
     float noiseMask = smoothstep(0.6, 2.0, max(abs(vCanvasUV.x), abs(vCanvasUV.y))); // less noise near the canvas border
-    float inkIntensity = computeInkIntensity(vUv, noiseMask);
-    vec3 color = mix(backgroundColor, inkColor, inkIntensity);
+    vec2 inkUV = vUv;
+
 #endif // WATCHMEN_MODE
+
+    float inkIntensity = computeInkIntensity(inkUV, noiseMask);
+    vec3 color = mix(backgroundColor, inkColor, inkIntensity);
 
     gl_FragColor = vec4(color, 1.0);
 }

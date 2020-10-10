@@ -14,6 +14,7 @@ function main(): void {
     if (!GLCanvas.initGL()) {
         return;
     }
+    gl.clearColor(0.967, 0.930, 0.608, 1); // same color as the SVG background
 
     function adjustCanvasSize(): void {
         GLCanvas.adjustSize(Parameters.supportHighDPI);
@@ -54,6 +55,9 @@ function main(): void {
 
         currentShader.bindUniforms();
 
+        if (currentMode === ShaderPicker.EMode.WATCHMEN) { // no need to clear canvas in classic mode because it redraws the whole canvas anyways
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         requestAnimationFrame(mainLoop);

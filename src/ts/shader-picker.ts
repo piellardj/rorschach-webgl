@@ -13,18 +13,18 @@ let currentMode: EMode | null = null;
 
 const randomScalar = Math.random() * 200 - 100;
 
-function loadShaderInternal(mode: EMode, callback: (success: boolean) => unknown): void {
+function loadShaderInternal(mode: EMode, vertexFilename: string, vbo: VBO, callback: (success: boolean) => unknown): void {
     ShaderManager.buildShader(
         {
             fragmentFilename: "rorschach.frag",
-            vertexFilename: "rorschach.vert",
+            vertexFilename,
             injected: {
                 SEED: randomScalar.toString(),
                 WATCHMEN_MODE_ID: (mode === EMode.WATCHMEN) ? "1" : "0",
             },
         }, (builtShader: Shader | null) => {
             if (builtShader !== null) {
-                builtShader.a["aCoords"].VBO = VBO.createQuad(gl, -1, -1, 1, 1);
+                builtShader.a["aCoords"].VBO = vbo;
                 shadersList[mode] = builtShader;
                 callback(true);
             } else {
@@ -53,8 +53,11 @@ function loadShaders(callback: (success: boolean) => unknown): void {
         }
     }
 
-    loadShaderInternal(EMode.CLASSIC, loadedShaderCallback);
-    loadShaderInternal(EMode.WATCHMEN, loadedShaderCallback);
+    const classicModeVBO = VBO.createQuad(gl, -1, -1, 1, 1); // redraw the whole canvas
+    loadShaderInternal(EMode.CLASSIC, "classic-mode.vert", classicModeVBO, loadedShaderCallback);
+
+    const watchmenModeVBO = VBO.createQuad(gl, -.6, -.95, .6, .2); // only draw the portion of canvas that is visibile through the SVG
+    loadShaderInternal(EMode.WATCHMEN, "watchmen-mode.vert", watchmenModeVBO, loadedShaderCallback);
 }
 
 /** Returns true if the shader was changed */
