@@ -58,13 +58,13 @@ function main(): void {
     function enableWatchmenMode(enabled: boolean): void {
         RorschachFace.setVisibility(enabled);
     }
+    enableWatchmenMode(Parameters.watchmenMode);
     Parameters.addWatchmenModeChange(enableWatchmenMode);
 
     Page.Canvas.showLoader(true);
     ShaderPicker.loadShaders((success: boolean) => {
         if (success) {
             Page.Canvas.showLoader(false);
-            enableWatchmenMode(Parameters.watchmenMode);
             requestAnimationFrame(mainLoop);
         } else {
             Page.Demopage.setErrorMessage("shaders-loading", "Failed to load shaders.");
