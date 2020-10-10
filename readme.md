@@ -7,7 +7,7 @@ Rorschach is also the most horrifying and fascinating character of the Watchmen 
 
 This is my attempt at recreating these patterns on GPU using WebGL, by computing a 3D multiscale gradient noise and thresholding it.
 
-See it live [here](https://piellardj.github.io/rorschach-webgl?page%3Acanvas%3Afullscreen=true).
+See it live [here](https://piellardj.github.io/rorschach-webgl/?page%3Acanvas%3Afullscreen=true).
 
 ![Screenshot](src/readme/screenshot.png)
 
