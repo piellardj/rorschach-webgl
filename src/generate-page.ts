@@ -28,6 +28,24 @@ const data = {
             title: "Parameters",
             controls: [
                 {
+                    type: Demopage.supportedControls.Tabs,
+                    title: "Mode",
+                    id: "mode-tabs-id",
+                    unique: true,
+                    options: [
+                        {
+                            label: "Classic",
+                            value: "0",
+                            checked: false,
+                        },
+                        {
+                            label: "Watchmen",
+                            value: "1",
+                            checked: true,
+                        },
+                    ]
+                },
+                {
                     type: Demopage.supportedControls.Range,
                     title: "Speed",
                     id: "speed-range-id",
@@ -80,12 +98,6 @@ const data = {
                     max: 10,
                     value: 1,
                     step: 0.5
-                },
-                {
-                    type: Demopage.supportedControls.Checkbox,
-                    title: "Watchmen",
-                    id: "watchmen-mode-checkbox-id",
-                    checked: true
                 },
                 {
                     type: Demopage.supportedControls.Checkbox,

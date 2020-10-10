@@ -6,7 +6,7 @@ const controlId = {
     SPEED: "speed-range-id",
     SHARPNESS: "sharpness-range-id",
     DENSITY: "density-range-id",
-    WATCHMEN_MODE: "watchmen-mode-checkbox-id",
+    MODE: "mode-tabs-id",
     HIGH_DPI: "high-dpi-checkbox-id",
     SCALE: "scale-range-id",
     SYMETRY: "symetry-range-id",
@@ -50,10 +50,13 @@ abstract class Parameters {
     }
 
     public static get watchmenMode(): boolean {
-        return Page.Checkbox.isChecked(controlId.WATCHMEN_MODE);
+        const mode = Page.Tabs.getValues(controlId.MODE);
+        return mode[0] === "1";
     }
     public static addWatchmenModeChange(callback: (enabled: boolean) => unknown): void {
-        Page.Checkbox.addObserver(controlId.WATCHMEN_MODE, callback);
+        Page.Tabs.addObserver(controlId.MODE, () => {
+            callback(Parameters.watchmenMode);
+        });
     }
 
     public static get supportHighDPI(): boolean {
