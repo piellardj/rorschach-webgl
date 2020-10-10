@@ -42,8 +42,8 @@ function main(): void {
         }
 
         currentShader.u["uTime"].value = getTime();
-        currentShader.u["uSharpness"].value = 1 - Math.pow(Parameters.sharpness, 0.1);
-        currentShader.u["uThreshold"].value = 1 - (0.5 + 0.4*(Parameters.density - 0.5));
+        currentShader.u["uSharpness"].value = 1 - Parameters.sharpness;
+        currentShader.u["uThreshold"].value = 1 - Parameters.density;
         currentShader.u["uScale"].value = Parameters.scale;
         currentShader.u["uSymetry"].value = Parameters.symetry;
         currentShader.u["uMaxDetails"].value = Parameters.details;

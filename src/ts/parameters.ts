@@ -16,6 +16,15 @@ const controlId = {
 
 Page.Controls.setVisibility(controlId.HIGH_DPI, window.devicePixelRatio > 1);
 
+function safePow(x: number, p: number): number {
+    if (x <= 0) {
+        return 0;
+    } else if (x >= 1) {
+        return 1;
+    }
+    return Math.pow(x, p);
+}
+
 abstract class Parameters {
     public static get speed(): number {
         return Page.Range.getValue(controlId.SPEED);
@@ -26,11 +35,18 @@ abstract class Parameters {
     }
 
     public static get sharpness(): number {
-        return Page.Range.getValue(controlId.SHARPNESS);
+        const rawValue = Page.Range.getValue(controlId.SHARPNESS);
+        return safePow(rawValue, 0.05);
     }
 
     public static get density(): number {
-        return Page.Range.getValue(controlId.DENSITY);
+        const rawValue = Page.Range.getValue(controlId.DENSITY);
+
+        if (rawValue < 0.5) {
+            return 0.5 *safePow(2 * rawValue, 0.1);
+        } else {
+            return 1 - 0.5 * safePow(2 - 2 * rawValue, 0.05);
+        }
     }
 
     public static get watchmenMode(): boolean {
