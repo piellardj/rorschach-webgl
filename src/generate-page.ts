@@ -25,7 +25,7 @@ const data = {
     },
     controlsSections: [
         {
-            title: "Parameters",
+            title: "Simulation",
             controls: [
                 {
                     type: Demopage.supportedControls.Tabs,
@@ -54,6 +54,26 @@ const data = {
                     value: 1,
                     step: 0.1
                 },
+                {
+                    type: Demopage.supportedControls.Range,
+                    title: "Scale",
+                    id: "scale-range-id",
+                    min: 0.5,
+                    max: 10,
+                    value: 1,
+                    step: 0.5
+                },
+                {
+                    type: Demopage.supportedControls.Checkbox,
+                    title: "High DPI",
+                    id: "high-dpi-checkbox-id",
+                    checked: false
+                },
+            ]
+        },
+        {
+            title: "Appearance",
+            controls: [
                 {
                     type: Demopage.supportedControls.Range,
                     title: "Details",
@@ -89,21 +109,6 @@ const data = {
                     max: 1.0,
                     value: 0.5,
                     step: 0.01
-                },
-                {
-                    type: Demopage.supportedControls.Range,
-                    title: "Scale",
-                    id: "scale-range-id",
-                    min: 0.5,
-                    max: 10,
-                    value: 1,
-                    step: 0.5
-                },
-                {
-                    type: Demopage.supportedControls.Checkbox,
-                    title: "High DPI",
-                    id: "high-dpi-checkbox-id",
-                    checked: false
                 },
             ],
         }
