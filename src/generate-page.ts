@@ -7,7 +7,9 @@ const data = {
     title: "Rorschach",
     description: "Generation of Rorschach-like inkblots with WebGL.",
     introduction: [
-        "PLACEHOLDER INTRODUCTION"
+        "The Rorschach test is a projective test relying on the interpretation of symmetrical images made of random inkblots.",
+        "Rorschach is also the most horrifying and fascinating character of the Watchmen comics, hiding behind an ever-changing mask to become a moral judge instead of acknowledging his own issues with violence.",
+        "This is my attempt at recreating these patterns on GPU using WebGL, by computing a 3D multiscale gradient noise and thresholding it."
     ],
     githubProjectName: "rorschach-webgl",
     additionalLinks: [],
@@ -80,7 +82,7 @@ const data = {
                     id: "details-range-id",
                     min: 1,
                     max: 5,
-                    value: 4.5,
+                    value: 3.75,
                     step: 0.01
                 },
                 {
