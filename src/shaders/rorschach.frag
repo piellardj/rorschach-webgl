@@ -110,10 +110,10 @@ float computeInkIntensity(vec2 uv, float noiseMask)
 
 void main(void)
 {
+#if WATCHMEN_MODE==1
     const vec3 backgroundColor = vec3(1);
     const vec3 inkColor = vec3(0.1);
 
-#if WATCHMEN_MODE==1
     // adjust UV grid to the face of Rorschach, so that [-1,1]^2 fits the whole head
     vec2 adjustedUv = 2.0 * (vUv - 0.0);
     adjustedUv.x *= 1.0 + 0.2 * smoothstep(0.0, 0.2, adjustedUv.x); // the head is slightly looking to its left, so offset the grid
@@ -131,6 +131,8 @@ void main(void)
     color = mix(color, watchmenColor, isOutsideDisk);
 
 #else // WATCHMEN_MODE!=1
+    const vec3 backgroundColor = vec3(.996, 0.985, 0.97);
+    const vec3 inkColor = vec3(.1, .1, .2);
 
     float noiseMask = smoothstep(0.6, 2.0, max(abs(vCanvasUV.x), abs(vCanvasUV.y))); // less noise near the canvas border
     float inkIntensity = computeInkIntensity(vUv, noiseMask);
