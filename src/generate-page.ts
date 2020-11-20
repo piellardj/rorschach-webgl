@@ -69,7 +69,7 @@ const data = {
                     type: Demopage.supportedControls.Checkbox,
                     title: "High DPI",
                     id: "high-dpi-checkbox-id",
-                    checked: false
+                    checked: true
                 },
             ]
         },
