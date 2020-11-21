@@ -105,7 +105,7 @@ const data = {
                 },
                 {
                     type: Demopage.supportedControls.Range,
-                    title: "Symetry",
+                    title: "Symmetry",
                     id: "symetry-range-id",
                     min: 0.5,
                     max: 1.0,
