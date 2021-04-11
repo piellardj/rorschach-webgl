@@ -112,6 +112,12 @@ const data = {
                     value: 0.5,
                     step: 0.01
                 },
+                {
+                    type: Demopage.supportedControls.ColorPicker,
+                    title: "Background",
+                    id: "background-color-id",
+                    defaultValueHex: "#F6ED98"
+                }
             ],
         }
     ]

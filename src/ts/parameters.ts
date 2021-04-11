@@ -10,9 +10,17 @@ const controlId = {
     HIGH_DPI: "high-dpi-checkbox-id",
     SCALE: "scale-range-id",
     SYMETRY: "symetry-range-id",
-    DETAILS: "details-range-id"
+    DETAILS: "details-range-id",
+    BACKGROUND_COLOR: "background-color-id",
 };
 
+type Observer = () => unknown;
+const backgroundColorChangeObservers: Observer[] = [];
+Page.ColorPicker.addObserver(controlId.BACKGROUND_COLOR, () => {
+    for (const observer of backgroundColorChangeObservers) {
+        observer();
+    }
+});
 
 Page.Controls.setVisibility(controlId.HIGH_DPI, window.devicePixelRatio > 1);
 
@@ -23,6 +31,12 @@ function safePow(x: number, p: number): number {
         return 1;
     }
     return Math.pow(x, p);
+}
+
+interface IRGB {
+    r: number; // in [0, 255]
+    g: number; // in [0, 255]
+    b: number; // in [0, 255]
 }
 
 abstract class Parameters {
@@ -43,7 +57,7 @@ abstract class Parameters {
         const rawValue = Page.Range.getValue(controlId.DENSITY);
 
         if (rawValue < 0.5) {
-            return 0.5 *safePow(2 * rawValue, 0.1);
+            return 0.5 * safePow(2 * rawValue, 0.1);
         } else {
             return 1 - 0.5 * safePow(2 - 2 * rawValue, 0.05);
         }
@@ -79,8 +93,23 @@ abstract class Parameters {
     public static get details(): number {
         return Page.Range.getValue(controlId.DETAILS);
     }
+
+    public static get backgroundColor(): IRGB {
+        return Page.ColorPicker.getValue(controlId.BACKGROUND_COLOR) as IRGB;
+    }
+
+    public static addColorChangeObserver(callback: Observer): void {
+        backgroundColorChangeObservers.push(callback);
+    }
 }
 
+function updateBackgroundColorPickerVisibility(): void {
+    Page.Controls.setVisibility(controlId.BACKGROUND_COLOR, Parameters.watchmenMode);
+}
+Parameters.addWatchmenModeChange(updateBackgroundColorPickerVisibility);
+updateBackgroundColorPickerVisibility();
+
 export {
+    IRGB,
     Parameters,
 }

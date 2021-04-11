@@ -14,7 +14,6 @@ function main(): void {
     if (!GLCanvas.initGL()) {
         return;
     }
-    gl.clearColor(0.967, 0.930, 0.608, 1); // same color as the SVG background
 
     function adjustCanvasSize(): void {
         GLCanvas.adjustSize(Parameters.supportHighDPI);
@@ -30,8 +29,16 @@ function main(): void {
         }
     }
 
+    function updateBackgroundColor(): void {
+        const backgroundColor = Parameters.backgroundColor;
+        gl.clearColor(backgroundColor.r / 255, backgroundColor.g / 255, backgroundColor.b / 255, 1);
+        RorschachFace.setBackgroundColor(backgroundColor);
+    }
+
     let canvasSizeChanged = true;
+    let backgroundColorChanged = true;
     Parameters.addResizeObserver(() => canvasSizeChanged = true);
+    Parameters.addColorChangeObserver(() => backgroundColorChanged = true);
 
     function mainLoop(): void {
         const currentMode = Parameters.watchmenMode ? ShaderPicker.EMode.WATCHMEN : ShaderPicker.EMode.CLASSIC;
@@ -44,6 +51,11 @@ function main(): void {
         if (canvasSizeChanged) {
             adjustCanvasSize();
             canvasSizeChanged = false;
+        }
+
+        if (backgroundColorChanged) {
+            updateBackgroundColor();
+            backgroundColorChanged = false;
         }
 
         currentShader.u["uTime"].value = getTime();
@@ -66,13 +78,13 @@ function main(): void {
     function enableWatchmenMode(enabled: boolean): void {
         RorschachFace.setVisibility(enabled);
     }
-    enableWatchmenMode(Parameters.watchmenMode);
     Parameters.addWatchmenModeChange(enableWatchmenMode);
 
     Page.Canvas.showLoader(true);
     ShaderPicker.loadShaders((success: boolean) => {
         if (success) {
             Page.Canvas.showLoader(false);
+            enableWatchmenMode(Parameters.watchmenMode);
             requestAnimationFrame(mainLoop);
         } else {
             Page.Demopage.setErrorMessage("shaders-loading", "Failed to load shaders.");
