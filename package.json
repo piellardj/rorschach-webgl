@@ -2,7 +2,10 @@
   "name": "rorschach-webgl",
   "homepage": "https://piellardj.github.io/rorschach-webgl",
   "description": "Generation of Rorschach-like inkblots with WebGL.",
-  "main": "build/index.js",
+  "author": "Jérémie PIELLARD <jeremie.piellard@gmail.com> (https://github.com/piellardj)",
+  "repository": "github:piellardj/rorschach-webgl",
+  "private": true,
+  "license": "ISC",
   "scripts": {
     "pre-commit": "npm run rebuild && npm run lint",
     "build-page": "ts-node-script src/generate-page.ts",
@@ -12,9 +15,6 @@
     "rebuild": "npm run clean && npm run build",
     "webpack": "webpack --config src/config/webpack.config.js"
   },
-  "author": "Jérémie PIELLARD <jeremie.piellard@gmail.com> (https://github.com/piellardj)",
-  "repository": "github:piellardj/rorschach-webgl",
-  "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.14.37",
     "fs-extra": "^9.1.0",
