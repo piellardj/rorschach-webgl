@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 var Page;
 (function (Page) {
     var Demopage;
@@ -44,7 +43,6 @@ var Page;
     })(Demopage = Page.Demopage || (Page.Demopage = {}));
 })(Page || (Page = {}));
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 var Page;
 (function (Page) {
     var Helpers;
@@ -163,7 +161,6 @@ var Page;
     })(Helpers = Page.Helpers || (Page.Helpers = {}));
 })(Page || (Page = {}));
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 var Page;
 (function (Page) {
     var Controls;
@@ -184,7 +181,6 @@ var Page;
         Controls.setVisibility = setVisibility;
     })(Controls = Page.Controls || (Page.Controls = {}));
 })(Page || (Page = {}));
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 (function (Page) {
     var Sections;
     (function (Sections) {
@@ -245,7 +241,6 @@ var Page;
 })(Page || (Page = {}));
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 var Page;
 (function (Page) {
     var Tabs;
@@ -349,6 +344,10 @@ var Page;
                 Page.Helpers.URL.setQueryParameter(PREFIX, tabs.id, values);
             }
             Storage.storeState = storeState;
+            function clearStoredState(tabs) {
+                Page.Helpers.URL.removeQueryParameter(PREFIX, tabs.id);
+            }
+            Storage.clearStoredState = clearStoredState;
             function applyStoredState() {
                 Page.Helpers.URL.loopOnParameters(PREFIX, function (controlId, value) {
                     var values = value.split(SEPARATOR);
@@ -386,16 +385,29 @@ var Page;
             return tabs.values;
         }
         Tabs_1.getValues = getValues;
-        function setValues(tabsId, values) {
+        function setValues(tabsId, values, updateURLStorage) {
+            if (updateURLStorage === void 0) { updateURLStorage = false; }
             var tabs = Cache.getTabsById(tabsId);
             tabs.values = values;
+            if (updateURLStorage) {
+                Storage.storeState(tabs);
+            }
         }
         Tabs_1.setValues = setValues;
+        function storeState(tabsId) {
+            var tabs = Cache.getTabsById(tabsId);
+            Storage.storeState(tabs);
+        }
+        Tabs_1.storeState = storeState;
+        function clearStoredState(tabsIdd) {
+            var tabs = Cache.getTabsById(tabsIdd);
+            Storage.clearStoredState(tabs);
+        }
+        Tabs_1.clearStoredState = clearStoredState;
     })(Tabs = Page.Tabs || (Page.Tabs = {}));
 })(Page || (Page = {}));
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 var Page;
 (function (Page) {
     var Range;
@@ -409,6 +421,10 @@ var Page;
                 this.progressLeftElement = container.querySelector(".range-progress-left");
                 this.tooltipElement = container.querySelector("output.range-tooltip");
                 this.id = this.inputElement.id;
+                var inputMin = +this.inputElement.min;
+                var inputMax = +this.inputElement.max;
+                var inputStep = +this.inputElement.step;
+                this.nbDecimalsToDisplay = Range.getMaxNbDecimals(inputMin, inputMax, inputStep);
                 this.inputElement.addEventListener("input", function (event) {
                     event.stopPropagation();
                     _this.reloadValue();
@@ -449,11 +465,46 @@ var Page;
                 var progression = currentLength / totalLength;
                 progression = Math.max(0, Math.min(1, progression));
                 this.progressLeftElement.style.width = (100 * progression) + "%";
-                this.tooltipElement.textContent = this.inputElement.value;
+                var text;
+                if (this.nbDecimalsToDisplay < 0) {
+                    text = this.inputElement.value;
+                }
+                else {
+                    text = (+this.inputElement.value).toFixed(this.nbDecimalsToDisplay);
+                }
+                this.tooltipElement.textContent = text;
             };
             Range.prototype.reloadValue = function () {
                 this._value = +this.inputElement.value;
                 this.updateAppearance();
+            };
+            Range.getMaxNbDecimals = function () {
+                var numbers = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    numbers[_i] = arguments[_i];
+                }
+                var nbDecimals = -1;
+                for (var _a = 0, numbers_1 = numbers; _a < numbers_1.length; _a++) {
+                    var n = numbers_1[_a];
+                    var local = Range.nbDecimals(n);
+                    if (n < 0) {
+                        return -1;
+                    }
+                    else if (nbDecimals < local) {
+                        nbDecimals = local;
+                    }
+                }
+                return nbDecimals;
+            };
+            Range.nbDecimals = function (x) {
+                var xAsString = x.toString();
+                if (/^[0-9]+$/.test(xAsString)) {
+                    return 0;
+                }
+                else if (/^[0-9]+\.[0-9]+$/.test(xAsString)) {
+                    return xAsString.length - (xAsString.indexOf(".") + 1);
+                }
+                return -1; // failed to parse
             };
             return Range;
         }());
@@ -491,6 +542,10 @@ var Page;
                 Page.Helpers.URL.setQueryParameter(PREFIX, range.id, valueAsString);
             }
             Storage.storeState = storeState;
+            function clearStoredState(range) {
+                Page.Helpers.URL.removeQueryParameter(PREFIX, range.id);
+            }
+            Storage.clearStoredState = clearStoredState;
             function applyStoredState() {
                 Page.Helpers.URL.loopOnParameters(PREFIX, function (controlId, value) {
                     var range = Cache.getRangeById(controlId);
@@ -510,7 +565,8 @@ var Page;
             Cache.load();
             Storage.applyStoredState();
         });
-        var isIE11 = !!window.MSInputMethodContext && !!document["documentMode"];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
         /**
          * Callback will be called every time the value changes.
          * @return {boolean} Whether or not the observer was added
@@ -557,11 +613,20 @@ var Page;
             }
         }
         Range_1.setValue = setValue;
+        function storeState(rangeId) {
+            var range = Cache.getRangeById(rangeId);
+            Storage.storeState(range);
+        }
+        Range_1.storeState = storeState;
+        function clearStoredState(rangeId) {
+            var range = Cache.getRangeById(rangeId);
+            Storage.clearStoredState(range);
+        }
+        Range_1.clearStoredState = clearStoredState;
     })(Range = Page.Range || (Page.Range = {}));
 })(Page || (Page = {}));
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 var Page;
 (function (Page) {
     var Checkbox;
@@ -636,6 +701,10 @@ var Page;
                 Page.Helpers.URL.setQueryParameter(PREFIX, checkbox.id, stateAsString);
             }
             Storage.storeState = storeState;
+            function clearStoredState(checkbox) {
+                Page.Helpers.URL.removeQueryParameter(PREFIX, checkbox.id);
+            }
+            Storage.clearStoredState = clearStoredState;
             function applyStoredState() {
                 Page.Helpers.URL.loopOnParameters(PREFIX, function (checkboxId, value) {
                     var checkbox = Cache.getCheckboxById(checkboxId);
@@ -682,11 +751,20 @@ var Page;
             return false;
         }
         Checkbox_1.isChecked = isChecked;
+        function storeState(checkboxId) {
+            var checkbox = Cache.getCheckboxById(checkboxId);
+            Storage.storeState(checkbox);
+        }
+        Checkbox_1.storeState = storeState;
+        function clearStoredState(checkboxId) {
+            var checkbox = Cache.getCheckboxById(checkboxId);
+            Storage.clearStoredState(checkbox);
+        }
+        Checkbox_1.clearStoredState = clearStoredState;
     })(Checkbox = Page.Checkbox || (Page.Checkbox = {}));
 })(Page || (Page = {}));
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 var Page;
 (function (Page) {
     var ColorPicker;
@@ -798,12 +876,12 @@ var Page;
             }
             Object.defineProperty(ColorPicker.prototype, "value", {
                 get: function () {
-                    return this.element.dataset.currentColor;
+                    return this.element.dataset["currentColor"];
                 },
                 set: function (newValue) {
                     var previousValue = this.value;
                     if (previousValue !== newValue) {
-                        this.element.dataset.currentColor = newValue;
+                        this.element.dataset["currentColor"] = newValue;
                         this.updateVisiblePart();
                         var rgb = ColorSpace.hexToRgb(newValue);
                         for (var _i = 0, _a = this.observers; _i < _a.length; _i++) {
@@ -856,6 +934,10 @@ var Page;
                 Page.Helpers.URL.setQueryParameter(PREFIX, colorPicker.id, colorPicker.value);
             }
             Storage.storeState = storeState;
+            function clearStoredState(colorPicker) {
+                Page.Helpers.URL.removeQueryParameter(PREFIX, colorPicker.id);
+            }
+            Storage.clearStoredState = clearStoredState;
             function applyStoredState() {
                 Page.Helpers.URL.loopOnParameters(PREFIX, function (controlId, value) {
                     var colorPicker = Cache.getColorPickerById(controlId);
@@ -964,19 +1046,19 @@ var Page;
             Popup.prototype.updateAppearance = function () {
                 var rgb = ColorSpace.hsvToRgb(this.hsv);
                 var hexString = ColorSpace.rgbToHex(rgb);
-                var rgbString = "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")"; // real coor
-                var hslString = "hsl(" + Math.round(this.hsv.h) + ", 100%, 50%)"; // pure color
+                var rgbString = "rgb(".concat(rgb.r, ", ").concat(rgb.g, ", ").concat(rgb.b, ")"); // real coor
+                var hslString = "hsl(".concat(Math.round(this.hsv.h), ", 100%, 50%)"); // pure color
                 // colors
-                this.hueColorFilter.style.background = "linear-gradient(to right, white, " + hslString + ")";
+                this.hueColorFilter.style.background = "linear-gradient(to right, white, ".concat(hslString, ")");
                 this.hueCursor.style.background = hslString;
                 this.valueSaturationCursor.style.background = rgbString;
                 this.previewColor.style.background = rgbString;
                 // text
                 this.previewHexaValue.value = hexString.substring(1);
-                this.previewRgbValue.textContent = rgb.r + ", " + rgb.g + ", " + rgb.b;
+                this.previewRgbValue.textContent = "".concat(rgb.r, ", ").concat(rgb.g, ", ").concat(rgb.b);
                 var percentSaturation = Popup.percentageString(this.hsv.s);
                 var percentValue = Popup.percentageString(this.hsv.v);
-                this.previewHslValue.textContent = Math.round(this.hsv.h) + "\u00B0, " + percentSaturation + ", " + percentValue;
+                this.previewHslValue.textContent = "".concat(Math.round(this.hsv.h), "\u00B0, ").concat(percentSaturation, ", ").concat(percentValue);
                 // cursors positions
                 this.hueCursor.style.left = Popup.percentageString(this.hsv.h / 360);
                 this.valueSaturationCursor.style.left = percentSaturation;
@@ -1179,11 +1261,21 @@ var Page;
             colorPicker.value = hexValue;
         }
         ColorPicker_1.setValue = setValue;
+        function storeState(id) {
+            var colorPicker = Cache.getColorPickerById(id);
+            Storage.storeState(colorPicker);
+        }
+        ColorPicker_1.storeState = storeState;
+        function clearStoredState(id) {
+            var colorPicker = Cache.getColorPickerById(id);
+            Storage.clearStoredState(colorPicker);
+        }
+        ColorPicker_1.clearStoredState = clearStoredState;
     })(ColorPicker = Page.ColorPicker || (Page.ColorPicker = {}));
 })(Page || (Page = {}));
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 var Page;
 (function (Page) {
     var Canvas;
@@ -1300,10 +1392,11 @@ var Page;
         }
         var Mouse;
         (function (Mouse) {
-            var mousePosition = [];
+            var mousePosition = [0, 0];
+            var clientMousePosition = [0, 0];
             var isMouseDownInternal = false;
             function getMousePosition() {
-                return mousePosition.slice();
+                return [mousePosition[0], mousePosition[1]];
             }
             Mouse.getMousePosition = getMousePosition;
             function setMousePosition(x, y) {
@@ -1336,6 +1429,8 @@ var Page;
             }
             Mouse.mouseUp = mouseUp;
             function mouseMove(clientX, clientY) {
+                clientMousePosition[0] = clientX;
+                clientMousePosition[1] = clientY;
                 var newPos = clientToRelative(clientX, clientY);
                 var dX = newPos[0] - mousePosition[0];
                 var dY = newPos[1] - mousePosition[1];
@@ -1393,11 +1488,12 @@ var Page;
                         mouseUp();
                     }
                 });
+                canvasResizeObservers.push(function () {
+                    mouseMove(clientMousePosition[0], clientMousePosition[1]);
+                });
             }
         })(Mouse || (Mouse = {}));
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        var Touch;
-        (function (Touch) {
+        (function Touch() {
             var currentTouches = [];
             var currentDistance = 0; // for pinching management
             function computeDistance(firstTouch, secondTouch) {
@@ -1490,7 +1586,7 @@ var Page;
                 window.addEventListener("touchend", handleTouchEnd);
                 window.addEventListener("touchmove", handleTouchMove, { passive: false });
             }
-        })(Touch || (Touch = {}));
+        })();
         var Indicators;
         (function (Indicators) {
             var indicatorSpansCache = {};
