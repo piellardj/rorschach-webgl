@@ -12,6 +12,10 @@ const data = {
         "This is my attempt at recreating these patterns on GPU using WebGL, by computing a 3D multiscale gradient noise and thresholding it."
     ],
     githubProjectName: "rorschach-webgl",
+    readme: {
+        filepath: path.join(__dirname, "..", "README.md"),
+        branchName: "master"
+    },
     additionalLinks: [],
     styleFiles: [
         "css/main.css"
