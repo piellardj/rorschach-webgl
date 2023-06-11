@@ -9,6 +9,8 @@ This is my attempt at recreating these patterns on GPU using WebGL, by computing
 
 See it live [here](https://piellardj.github.io/rorschach-webgl/?page%3Acanvas%3Afullscreen=true).
 
+[![Donate](https://raw.githubusercontent.com/piellardj/piellardj.github.io/master/images/readme/donate-paypal.svg)](https://www.paypal.com/donate/?hosted_button_id=AF7H7GEJTL95E)
+
 ![Screenshot](src/readme/screenshot.png)
 
 ## Details
